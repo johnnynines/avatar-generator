@@ -6,7 +6,7 @@ Avatars are produced entirely in-browser — no external API calls or image asse
 
 ## How it works
 
-- Each avatar is an 8x8 pixel grid rendered as an inline SVG
+- Each avatar is a 12x12 pixel grid rendered as an inline SVG
 - The pixel pattern is derived from a seeded hash of the persona's name, job, and company
 - Color palette is driven by the persona `type` (e.g. Developer, Executive)
 - Background color is driven by the persona `industry` (e.g. Technology, Finance)

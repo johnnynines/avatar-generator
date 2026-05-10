@@ -39,13 +39,27 @@
               <option v-for="i in industries" :key="i" :value="i">{{ i }}</option>
             </select>
           </div>
+
+          <div class="field">
+            <label>Pixel Shape</label>
+            <div class="shape-options">
+              <button
+                v-for="s in shapes"
+                :key="s"
+                type="button"
+                class="shape-btn"
+                :class="{ active: shape === s }"
+                @click="shape = s"
+              >{{ s }}</button>
+            </div>
+          </div>
         </form>
       </section>
 
       <section class="preview-section">
         <h2>Preview</h2>
         <div class="avatar-card">
-          <AvatarDisplay :persona="filledPersona" :size="160" />
+          <AvatarDisplay :persona="filledPersona" :size="160" :shape="shape" />
           <div class="avatar-meta">
             <p class="avatar-name">{{ persona.name || 'Unnamed Persona' }}</p>
             <p class="avatar-job">{{ persona.job || 'No job title' }}</p>
@@ -59,7 +73,7 @@
 
         <div class="sizes-row">
           <div v-for="s in previewSizes" :key="s" class="size-preview">
-            <AvatarDisplay :persona="filledPersona" :size="s" />
+            <AvatarDisplay :persona="filledPersona" :size="s" :shape="shape" />
             <span class="size-label">{{ s }}px</span>
           </div>
         </div>
@@ -69,8 +83,9 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import AvatarDisplay from './components/AvatarDisplay.vue'
+import { SHAPES } from './lib/avatarGenerator'
 
 const personaTypes = [
   'Decision Maker',
@@ -100,6 +115,8 @@ const industries = [
 ]
 
 const previewSizes = [24, 40, 64, 100]
+const shapes = SHAPES
+const shape = ref('rounded')
 
 const persona = reactive({
   name: '',
@@ -282,5 +299,34 @@ h2 {
 .size-label {
   font-size: 0.75rem;
   color: #71717a;
+}
+
+.shape-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.shape-btn {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.85rem;
+  color: #3f3f46;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.shape-btn:hover {
+  border-color: #3f83f8;
+  color: #1a56db;
+}
+
+.shape-btn.active {
+  background: #1e429f;
+  border-color: #1e429f;
+  color: #fff;
 }
 </style>

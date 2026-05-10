@@ -22,12 +22,12 @@ function generatePalette(persona) {
 function generatePattern(persona) {
   if (!persona) {
     return {
-      pattern: Array(8).fill(Array(8).fill('#E5E7EB')),
+      pattern: Array(12).fill(Array(12).fill('#E5E7EB')),
       backgroundColor: '#F3F4F6'
     }
   }
 
-  const size = 8
+  const size = 12
   const pattern = []
   const seed = `${persona.name || ''}${persona.job || ''}${persona.company || ''}`
   const { palette, backgroundColor } = generatePalette(persona)
@@ -45,35 +45,53 @@ function generatePattern(persona) {
   return { pattern, backgroundColor }
 }
 
+function renderPixel(px, py, ps, color, shape) {
+  const cx = px + ps / 2
+  const cy = py + ps / 2
+  const r = ps / 2
+
+  switch (shape) {
+    case 'circle':
+      return `<circle cx="${cx}" cy="${cy}" r="${r * 0.85}" fill="${color}" />`
+
+    case 'triangle':
+      return `<polygon points="${cx},${py + ps * 0.1} ${px + ps * 0.9},${py + ps * 0.9} ${px + ps * 0.1},${py + ps * 0.9}" fill="${color}" />`
+
+    case 'diamond':
+      return `<polygon points="${cx},${py} ${px + ps},${cy} ${cx},${py + ps} ${px},${cy}" fill="${color}" />`
+
+    case 'square':
+      return `<rect x="${px}" y="${py}" width="${ps}" height="${ps}" fill="${color}" />`
+
+    case 'rounded':
+    default:
+      return `<rect x="${px}" y="${py}" width="${ps}" height="${ps}" fill="${color}" rx="2" ry="2" />`
+  }
+}
+
 // Convert pattern to SVG
-export function generateAvatar(persona, size = 100) {
+export function generateAvatar(persona, size = 100, shape = 'rounded') {
   if (!persona) {
     const defaultPattern = generatePattern(null)
-    return generateSVG(defaultPattern, size)
+    return generateSVG(defaultPattern, size, shape)
   }
 
   const { pattern, backgroundColor } = generatePattern(persona)
-  return generateSVG({ pattern, backgroundColor }, size)
+  return generateSVG({ pattern, backgroundColor }, size, shape)
 }
 
+export const SHAPES = ['rounded', 'square', 'circle', 'triangle', 'diamond']
+
 // Helper function to generate SVG
-function generateSVG({ pattern, backgroundColor }, size) {
+function generateSVG({ pattern, backgroundColor }, size, shape) {
   let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`
   svg += `<rect width="${size}" height="${size}" fill="${backgroundColor}" />`
 
   if (pattern) {
-    const pixelSize = size / (pattern.length || 8)
+    const pixelSize = size / (pattern.length || 12)
     pattern.forEach((row, y) => {
       row.forEach((color, x) => {
-        svg += `<rect
-          x="${x * pixelSize}"
-          y="${y * pixelSize}"
-          width="${pixelSize}"
-          height="${pixelSize}"
-          fill="${color}"
-          rx="2"
-          ry="2"
-        />`
+        svg += renderPixel(x * pixelSize, y * pixelSize, pixelSize, color, shape)
       })
     })
   }

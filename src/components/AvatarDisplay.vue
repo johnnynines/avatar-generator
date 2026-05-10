@@ -20,10 +20,14 @@ const props = defineProps({
   size: {
     type: Number,
     default: 100
+  },
+  shape: {
+    type: String,
+    default: 'rounded'
   }
 })
 
-const avatarSrc = computed(() => generateAvatar(props.persona, props.size))
+const avatarSrc = computed(() => generateAvatar(props.persona, props.size, props.shape))
 
 const altText = computed(() => {
   if (!props.persona?.name) return 'Generated avatar'
