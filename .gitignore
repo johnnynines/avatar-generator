@@ -1,7 +1,9 @@
 # General
 node_modules/
 dist/
-.CLAUDE.md
+CLAUDE.md
+.claude/
+
 # Dependencies
 node_modules/
 .pnp
@@ -28,7 +30,7 @@ lerna-debug.log*
 
 # Editor / IDE
 .vscode/*
-!.vscode/extensions.json
+.vscode/extensions.json
 .idea/
 *.suo
 *.ntvs*
